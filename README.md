@@ -78,29 +78,21 @@ npm run dev                                       # http://localhost:3000/admin
 
 > Every step uses a free plan. Total time is about 30 minutes.
 
-1. **Create a Neon project.** Sign up at neon.tech → *New project* → name it `microdough`, Postgres 16, region **AWS US East (Ohio)**, which is close to Vercel's default `iad1` region.
-2. **Get the connection strings.** In the Neon dashboard, click *Connect*. Copy the string with **Connection pooling ON** (its hostname contains `-pooler`) as `DATABASE_URL`, and the string with pooling **OFF** as `DATABASE_URL_UNPOOLED`.
-3. **Set up Drizzle locally.** Put both strings in your local `.env`, plus `AUTH_SECRET` and `NEXT_PUBLIC_SITE_URL`. The Drizzle config uses the unpooled URL for migrations automatically.
-4. **Run migrations and seed.**
-   ```bash
-   npm run db:migrate && npm run db:seed
-   ```
-5. **Create the owner account.**
-   ```bash
-   npm run admin:create -- owner@herdomain.com "Her Name"
-   ```
-   Use a password manager to generate a password of 16+ characters. Running it again with the same email resets the password.
-6. **Create the GitHub repo.** Make a new **private** repo (for example `microdough-cookie-club`), then:
-   ```bash
-   git init && git add . && git commit -m "Microdough Cookie Club v1"
-   git branch -M main && git remote add origin git@github.com:YOU/microdough-cookie-club.git && git push -u origin main
-   ```
-   `.env` is git-ignored, so double-check it isn't in the commit.
-7. **Connect GitHub to Vercel.** On vercel.com, choose *Add New → Project* and import the repo. The framework preset must be **Next.js** (`vercel.json` pins it). The Root Directory must be the folder that contains `package.json`.
-8. **Add environment variables** in Vercel → Settings → Environment Variables (Production and Preview):
-   `DATABASE_URL`, `DATABASE_URL_UNPOOLED`, `AUTH_SECRET` (a **new** random value, different from your local one), and `NEXT_PUBLIC_SITE_URL` (for example `https://microdough.vercel.app`, or her custom domain). QR codes print this URL, so set it **before** printing signs.
-9. **Deploy.** Click *Deploy*. After that, every push to `main` redeploys. When the schema changes later, run `npm run db:generate`, then `npm run db:migrate` against Neon **before** pushing.
-10. **Test the live site** with the [manual acceptance checklist](#manual-acceptance-checklist) below on a real phone. In particular, scan a printed QR code.
+**Easiest path (no terminal): Vercel's Neon integration + the one-time setup page.**
+
+1. **Create the Neon database.** In your Vercel project, go to **Storage → Create → Neon**. It adds `DATABASE_URL` and `DATABASE_URL_UNPOOLED` for you.
+2. **Push the code to GitHub** (a private repo) and import it in Vercel. The framework must be **Next.js**, and the Root Directory must be the folder that contains `package.json`.
+3. **Add three environment variables** in Vercel → Settings → Environment Variables (Production + Preview):
+   - `AUTH_SECRET`: 32+ random characters, from `openssl rand -base64 48` or a password manager
+   - `NEXT_PUBLIC_SITE_URL`: the live address, for example `https://microdoughcookieclub.vercel.app` (QR codes print this)
+   - `ADMIN_SETUP_CODE`: any secret phrase of 12+ characters, used once
+4. **Deploy (or redeploy).** Every build automatically **applies database migrations** and, on a brand-new database only, **seeds the six flavors**. Look for `✓ Database migrations applied` in the build log.
+5. **Create Emmy's account.** Open `https://YOUR-SITE/admin/setup`, enter the setup code, her name, email and password. The page disappears once the account exists. You can then delete `ADMIN_SETUP_CODE`.
+6. **Test the live site** with the [manual acceptance checklist](#manual-acceptance-checklist) on a real phone, including scanning a printed QR.
+
+**Terminal path (alternative):** put the Neon URLs in a local `.env`, then run `npm run db:migrate && npm run db:seed && npm run admin:create -- emmy@example.com "Emmy"`.
+
+> Builds migrate the database that `DATABASE_URL_UNPOOLED` (or `DATABASE_URL`) points to. Migrations only ever add things. If preview deploys share the production database, that's fine. If they use Neon preview branches, each branch gets migrated too.
 
 *Optional:* to add a custom domain, go to Vercel → Settings → Domains, then update `NEXT_PUBLIC_SITE_URL` and redeploy **before** printing signs.
 
@@ -120,13 +112,13 @@ The **permanent QR** always opens whichever pop-up is live. Print it once and re
 ## Deployment checklist
 
 - [ ] Neon project created and both connection strings saved in a password manager
-- [ ] `npm run db:migrate` and `npm run db:seed` run against Neon
-- [ ] Owner account created with a strong unique password
+- [ ] Build log shows `✓ Database migrations applied`
+- [ ] Owner account created at `/admin/setup` with a strong unique password (then `ADMIN_SETUP_CODE` removed)
 - [ ] GitHub repo is **private** and `.env` is not committed
-- [ ] Vercel env vars set: `DATABASE_URL` (pooled), `DATABASE_URL_UNPOOLED`, `AUTH_SECRET` (new value), `NEXT_PUBLIC_SITE_URL`
+- [ ] Vercel env vars set: `DATABASE_URL` (pooled), `DATABASE_URL_UNPOOLED`, `AUTH_SECRET`, `NEXT_PUBLIC_SITE_URL`, `ADMIN_SETUP_CODE` (temporary)
 - [ ] Framework preset is Next.js and Root Directory is correct
 - [ ] Deployed and `/` loads; `/admin` redirects to login
-- [ ] Settings: sponsor name and contact filled in
+- [ ] Settings: sponsor shows Emmy Le d/b/a Microdough (edit the contact if she wants an email listed)
 - [ ] Real logo, bunny and cookie photos uploaded (see placeholders)
 - [ ] Official rules reviewed (ideally by someone with legal knowledge) and approved
 - [ ] QR sign printed **after** the final domain was set, and test-scanned on iPhone and Android
@@ -206,7 +198,7 @@ Notable constraints: `events_one_active` (only one live pop-up), `entries_one_pe
 |---|---|---|
 | Logo, wordmark, bunny | `public/brand/*-placeholder.png` | Cropped from Instagram screenshots. Drop in originals with the same filenames, or edit `src/components/brand.tsx` |
 | Cookie photos | Admin → Flavors | The seed uses crops from the menu post (`seed-assets/`) |
-| Sponsor name and contact | Admin → Settings | Required before rules can be approved |
+| Sponsor name and contact | Admin → Settings | Defaults to Emmy Le d/b/a Microdough, Instagram @micro.dough |
 | Prize value | Each pop-up's giveaway section | Defaults to $24.00 |
 | Official rules wording | `src/components/official-rules.tsx` | A sensible template, **not legal advice**. Have it reviewed once |
 
