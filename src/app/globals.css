@@ -205,3 +205,37 @@ textarea.input {
     display: none !important;
   }
 }
+
+/* Flip cards (welcome page cookies) */
+.flip-scene {
+  perspective: 900px;
+}
+.flip-card {
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 650ms cubic-bezier(0.3, 1.35, 0.5, 1); /* tiny bounce at the end */
+  -webkit-tap-highlight-color: transparent;
+}
+.flip-card[data-flipped] {
+  transform: rotateY(180deg);
+}
+.flip-face {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+.flip-back {
+  transform: rotateY(180deg);
+}
+@media (hover: hover) {
+  .flip-card:not([data-flipped]):hover {
+    transform: rotateY(12deg) scale(1.02);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  /* no spin: swap faces instantly */
+  .flip-card {
+    transition: none !important;
+  }
+}

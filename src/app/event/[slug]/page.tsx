@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
-import { Logo, CookieImage } from "@/components/brand";
+import { Logo } from "@/components/brand";
+import { FlipCookies } from "@/components/flip-cookies";
 import { PublicShell } from "@/components/public-shell";
 import { loadEventFlavors, loadPublicEvent } from "@/lib/queries";
 import { effectiveCloseAt, feedbackOpen, giveawayPhase } from "@/lib/services/events";
@@ -37,10 +38,8 @@ export default async function WelcomePage({ params }: { params: Promise<{ slug: 
       </header>
 
       {flavors.length > 0 && (
-        <div className="rise mt-8 grid grid-cols-3 gap-2" style={{ animationDelay: "80ms" }} aria-hidden>
-          {flavors.slice(0, 6).map((f) => (
-            <CookieImage key={f.id} flavorId={f.id} version={f.imageVersion} name={f.name} size={160} className="w-full" />
-          ))}
+        <div className="mt-8">
+          <FlipCookies flavors={flavors} />
         </div>
       )}
 
