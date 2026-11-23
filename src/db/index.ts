@@ -17,8 +17,13 @@ declare global {
 function makePool() {
   const url = process.env.DATABASE_URL;
   if (!url) throw new Error("DATABASE_URL is not set");
+  // TLS is configured explicitly below, so drop sslmode/channel_binding from the URL
+  // (silences pg's "sslmode aliases" warning without weakening anything).
+  const u = new URL(url);
+  u.searchParams.delete("sslmode");
+  u.searchParams.delete("channel_binding");
   const pool = new Pool({
-    connectionString: url,
+    connectionString: u.toString(),
     max: 5,
     idleTimeoutMillis: 5_000,
     ssl: /localhost|127\.0\.0\.1/.test(url) ? false : { rejectUnauthorized: true },

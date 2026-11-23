@@ -7,6 +7,7 @@ const ITEMS = [
   { href: "/admin", label: "Home" },
   { href: "/admin/events", label: "Pop-ups" },
   { href: "/admin/giveaways", label: "Giveaways" },
+  { href: "/admin/insights", label: "Menu planner" },
   { href: "/admin/doughboard", label: "Doughboard" },
   { href: "/admin/feedback", label: "Feedback" },
   { href: "/admin/flavors", label: "Flavors" },

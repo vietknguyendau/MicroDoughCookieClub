@@ -36,6 +36,7 @@ Direct entry, no survey: **Enter Giveaway Without Survey** on the welcome page, 
 | Home | Live pop-up, entries, surveys, average rating, most-loved cookie, upcoming drawing, recent comments |
 | Pop-ups | Create and edit events, pick flavors, approve official rules, go live or end, print QR signs |
 | Giveaways | Eligible count, close entries, draw a winner, mark contacted or claimed, redraw for a stated reason, permanent audit trail |
+| Menu planner | Sorts every cookie into **Bring every time / Keep in rotation / Save for later / Rethink / Needs more tastings**, with the reasons, a trend line across pop-ups, a "divisive" flag, and a ranked, grouped list of "bake next" suggestions. The rules are in `src/lib/services/insights.ts` |
 | Doughboard | Flavor leaderboard (fair score, average, favorites, % buy again, sample size), filtered by current pop-up, a past pop-up, or all-time |
 | Feedback | Every response, search, filter by event, CSV export |
 | Flavors | Add, edit, reorder, set active or inactive, upload photos (resized on the phone first) |
@@ -166,7 +167,7 @@ Do this on a real phone, on the live site.
 ## Tests
 
 ```bash
-npm test          # 33 integration tests against a real local Postgres (TEST_DATABASE_URL)
+npm test          # 36 integration tests against a real local Postgres (TEST_DATABASE_URL)
 npm run typecheck
 npm run lint
 ```

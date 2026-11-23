@@ -92,7 +92,7 @@ export default async function AdminHome() {
           <CookieImage flavorId={all.mostPopular.flavorId} version={all.mostPopular.imageVersion} name={all.mostPopular.name} className="w-16" size={96} />
           <p className="text-sm">
             All-time fan favorite: <strong>{all.mostPopular.name}</strong>.{" "}
-            <Link prefetch={false} href="/admin/doughboard" className="underline">Open the Doughboard →</Link>
+            <Link prefetch={false} href="/admin/insights" className="underline">See the menu planner →</Link>
           </p>
         </section>
       )}
