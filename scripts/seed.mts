@@ -19,6 +19,14 @@ export const SEED_FLAVORS = [
 ];
 
 const { db, pool } = scriptDb();
+// Runs on every deploy: only seeds a brand-new database, so flavors Emmy
+// deletes or renames later are never brought back.
+const existing = await db.select({ id: flavors.id }).from(flavors).limit(1);
+if (existing.length) {
+  console.log("✓ Flavors already exist — seed skipped");
+  await pool.end();
+  process.exit(0);
+}
 for (const [i, f] of SEED_FLAVORS.entries()) {
   const [row] = await db
     .insert(flavors)

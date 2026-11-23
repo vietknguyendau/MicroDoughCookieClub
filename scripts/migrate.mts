@@ -3,5 +3,5 @@ import { scriptDb } from "./_db.mts";
 
 const { db, pool } = scriptDb();
 await migrate(db, { migrationsFolder: "./drizzle" });
-console.log("✓ Migrations applied");
+console.log("✓ Database migrations applied");
 await pool.end();

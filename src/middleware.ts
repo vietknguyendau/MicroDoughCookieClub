@@ -11,7 +11,7 @@ export function middleware(req: NextRequest) {
   if (pathname.startsWith("/admin") || pathname.startsWith("/api/admin")) {
     res.headers.set("X-Robots-Tag", "noindex, nofollow");
     res.headers.set("Cache-Control", "no-store");
-    if (pathname !== "/admin/login" && !req.cookies.get("md_admin")) {
+    if (pathname !== "/admin/login" && pathname !== "/admin/setup" && !req.cookies.get("md_admin")) {
       if (pathname.startsWith("/api/")) return new NextResponse("Unauthorized", { status: 401 });
       return NextResponse.redirect(new URL("/admin/login", req.url));
     }

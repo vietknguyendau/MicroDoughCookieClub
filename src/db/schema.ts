@@ -55,8 +55,8 @@ export const settings = pgTable(
   "settings",
   {
     id: smallint("id").primaryKey().default(1),
-    sponsorName: text("sponsor_name").notNull().default("Microdough"),
-    sponsorContact: text("sponsor_contact").notNull().default(""),
+    sponsorName: text("sponsor_name").notNull().default("Emmy Le d/b/a Microdough"),
+    sponsorContact: text("sponsor_contact").notNull().default("Instagram @micro.dough — instagram.com/micro.dough"),
     instagramHandle: text("instagram_handle").notNull().default("micro.dough"),
     retentionDays: integer("retention_days").notNull().default(180),
     nextPopupNote: text("next_popup_note").notNull().default(""), // shown on the confirmation page
